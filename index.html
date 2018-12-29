@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .example {
+            width: 100px;
+            height: 100px;
+            border: 1px solid;
+        }
+    </style>
+</head>
+<body>
+    <div class="example"></div>
+    <script>
+        let example = document.getElementsByClassName('example')[0];
+        let originalWidth;
+        let originalHeight;
+        let strengthFlag = false;
+        let startLeft;
+        let startTop;
+        example.onmousedown = function(event) {
+            startLeft = event.screenX;
+            startTop = event.screenY;
+            originalWidth = example.offsetWidth;
+            originalHeight = example.offsetHeight;
+            if (event.screenX - originalWidth <=4 && event.screenX - originalWidth >= -4) {
+                example.style.cursor = 'col-resize';
+            } else if(event.screenY - originalHeight <= 4 && event.screenY - originalHeight >= -4) {
+                example.style.cursor = 'row-resize';
+            } else if ((event.screenX - originalWidth <=4 && event.screenX - originalWidth >= -4)
+                && (event.screenY - originalHeight <= 4 && event.screenY - originalHeight >= -4)) {
+                example.style.cursor = 'se-resize';
+            } else {
+                return;
+            }
+            strengthFlag = true;
+        }
+        example.onmousemove = function(event) {
+            if (strengthFlag) {
+                const changedWidth = originalWidth + event.screenX - startLeft;
+                const changedHeight = originalHeight + event.screenY - startTop;
+                if (changedWidth <= 0 || changedHeight <= 0) {
+                    return;
+                }
+                example.style.width = changedWidth + "px";
+                example.style.height = changedHeight + "px";
+            }
+        }
+        window.onmouseup = function() {
+            strengthFlag = false;
+        }
+    </script>
+</body>
+</html>
